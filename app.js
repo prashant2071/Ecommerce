@@ -1,15 +1,33 @@
 const express = require("express");
 const app = express();
+const cors =require('cors')
 require("dotenv").config();
 const productRoute = require("./routes/productRoute");
 const PORT = process.env.PORT;
-
-//route part******************************************8
+app.use(cors());
+//route part****************************************
 app.use("/api/products", productRoute);
 
-app.all("*", (req, res) => {
-  res.status(400).send("page not found");
+
+
+//handle unnessary url******************************
+app.all("*", (req, res,next) => {
+  // res.status(400).send("page not found");
+  next("page not found");
 });
+
+
+
+//error handellng middleware ***********************
+// app.use( function(err, req, res,next) {
+//   res
+//   .status(400)
+//   .json({
+//     text: "from error handelling middleware ",
+//     msg: err.msg|| err,
+//     status: err.status || 400,
+//   });
+// });
 
 app.listen(PORT, (err) => {
   if (err) {
