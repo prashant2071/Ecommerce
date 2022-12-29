@@ -18,16 +18,16 @@ app.all("*", (req, res,next) => {
 
 
 
-//error handellng middleware ***********************
-// app.use( function(err, req, res,next) {
-//   res
-//   .status(400)
-//   .json({
-//     text: "from error handelling middleware ",
-//     msg: err.msg|| err,
-//     status: err.status || 400,
-//   });
-// });
+// error handellng middleware ***********************
+app.use( function(err, req, res,next) {
+  res
+  .status(400)
+  .json({
+    text: "from error handelling middleware ",
+    msg: err.msg|| err,
+    status: err.status || 400,
+  });
+});
 
 app.listen(PORT, (err) => {
   if (err) {
