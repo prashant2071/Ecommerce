@@ -1,27 +1,21 @@
-const productData = require('../data/productData.json');
 const router = require('express').Router();
-const log =require('chalk-console');
+const{
+    getAllProducts,
+    getProductById,
+    postProduct,
+    replaceProduct,
+    updateProduct,
+    deleteProduct
+} =require('../controller/productController')
+const {logger1,logger2} =require('../middleware/middleware')
 
-
-router.get('/',(req,res)=>{
-    console.log('hello')
-    const {category} =req.query;
-    log.blue('hello');
-    category?
-    res.json(productData.filter((item)=>item.category==category)):
-    res.json(productData)
-    })
+router.get('/',[logger1,logger2], getAllProducts)
     
 
-    router.get('/:productId',(req,res,next)=>{
-        const {productId} =req.params;
-        if(productId>0 && productId <=productData.length){
-            res.json(productData[productId-1]);
-        }
-        else{
-            // res.send('index out of bound');
-            next('index out of bound');
-        }
-    })
+    router.get('/:productId',getProductById)
+    router.post('/',postProduct)
+    router.put('/:productId',replaceProduct);
+    router.patch('/:prodductId',updateProduct);
+    router.delete('/:productId',deleteProduct);
 
     module.exports=router;

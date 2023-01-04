@@ -5,6 +5,7 @@ require("dotenv").config();
 const productRoute = require("./routes/productRoute");
 const PORT = process.env.PORT;
 app.use(cors());
+app.use(express.json());
 //route part****************************************
 app.use("/api/products", productRoute);
 
