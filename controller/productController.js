@@ -65,7 +65,6 @@ const replaceProduct = async (req,res) =>{
 const updateProduct = async(req,res) =>{
     try{
         const {productId} = req.params;
-        console.log("the productId is ",req.query)
         const updatedProduct = await ProductModel.findByIdAndUpdate({_id: productId},req.body,{new:true}) //{new:true} return newly updated json data
         res.json({updatedProduct})
         }
