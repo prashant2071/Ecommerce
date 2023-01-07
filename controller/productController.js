@@ -1,6 +1,7 @@
 const productData = require('../data/productData.json');
 const log =require('chalk-console');
-const ProductModel = require('../models/productModel')
+const ProductModel = require('../models/productModel');
+const { Mongoose } = require('mongoose');
 
 const getAllProducts =async (req,res) =>{
     try {
@@ -18,8 +19,9 @@ const getAllProducts =async (req,res) =>{
 }
 const getProductById =async (req,res) =>{
     try {
-        const { productID } = req.params
-        const productData = await ProductModel.find({ _id: productID })
+        const { productId } = req.params
+        console.log("the productId is ",productId)
+        const productData = await ProductModel.find({ _id:productId })
         res.json(productData)
     }catch(err){
         res.status(500).json({message: err.message})
@@ -50,8 +52,8 @@ const createProduct = async (req,res) =>{
 }
 const replaceProduct = async (req,res) =>{
     try{
-    const {productId} = req.query;
-    const replaceProduct = await ProductModel.findOneAndReplace({_id:productId},{new:true})
+    const {productId} = req.params;
+    const replaceProduct = await ProductModel.findOneAndReplace({_id: productId},req.body,{new:true})
     res.json({replaceProduct})
     }
     catch(err){
@@ -62,9 +64,10 @@ const replaceProduct = async (req,res) =>{
 }
 const updateProduct = async(req,res) =>{
     try{
-        const {productId} = req.query;
-        const replaceProduct = await ProductModel.findByIdAndUpdate({_id:productId},req.body,{new:true})
-        res.json({replaceProduct})
+        const {productId} = req.params;
+        console.log("the productId is ",req.query)
+        const updatedProduct = await ProductModel.findByIdAndUpdate({_id: productId},req.body,{new:true}) //{new:true} return newly updated json data
+        res.json({updatedProduct})
         }
         catch(err){
             res.status(500).json({msg:err.message})
@@ -73,9 +76,9 @@ const updateProduct = async(req,res) =>{
 }
 const deleteProduct = async(req,res) =>{
     try{
-        const {productId} = req.query;
-        const replaceProduct = await ProductModel.findByIdAndDelete(productId)
-        res.json({replaceProduct})
+        const {productId} = req.params;
+        const deleteProduct = await ProductModel.findByIdAndDelete(productId)
+        res.json({deleteProduct})
         }
         catch(err){
             res.status(500).json({msg:err.message})
