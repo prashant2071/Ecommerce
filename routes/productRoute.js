@@ -2,7 +2,7 @@ const router = require('express').Router();
 const{
     getAllProducts,
     getProductById,
-    postProduct,
+    createProduct,
     replaceProduct,
     updateProduct,
     deleteProduct
@@ -13,7 +13,7 @@ router.get('/',[logger1,logger2], getAllProducts)
     
 
     router.get('/:productId',getProductById)
-    router.post('/',postProduct)
+    router.post('/',createProduct)
     router.put('/:productId',replaceProduct);
     router.patch('/:prodductId',updateProduct);
     router.delete('/:productId',deleteProduct);

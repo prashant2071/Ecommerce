@@ -1,48 +1,91 @@
 const productData = require('../data/productData.json');
 const log =require('chalk-console');
+const ProductModel = require('../models/productModel')
 
-const getAllProducts = (req,res) =>{
-    const {category} =req.query;
-    log.blue('hello');
-    category?
-    res.json(productData.filter((item)=>item.category==category)):
-    res.json(productData)
-}
-const getProductById = (req,res) =>{
-    const {productId} =req.params;
-    if(productId>0 && productId <=productData.length){
-        res.json(productData[productId-1]);
-    }
-    else{
-        // res.send('index out of bound');
-        next('index out of bound');
+const getAllProducts =async (req,res) =>{
+    try {
+        const { category } = req.query;
+        if (category) {
+            const filteredProducts = await ProductModel.find({ category });
+            res.json(filteredProducts)
+        } else {
+            const productData = await ProductModel.find();
+            res.json(productData)
+        }
+    } catch (err) {
+        res.status(500).json({message: err.message})
     }
 }
-const postProduct = (req,res) =>{
-    console.log('req data is',req.body);
-    res.send("data recieved successfully")
+const getProductById =async (req,res) =>{
+    try {
+        const { productID } = req.params
+        const productData = await ProductModel.find({ _id: productID })
+        res.json(productData)
+    }catch(err){
+        res.status(500).json({message: err.message})
+    }
 }
-const replaceProduct = (req,res) =>{
-    const {productId} = req.params
-    res.send("data put recieved successfully");
+const createProduct = async (req,res) =>{
+    try{
+        //  const product = new ProductModel(req.body);
+        //  product.save();
+
+        //Alternate method 
+        const product = await ProductModel.create(req.body);
+         res.status(200).json({
+            message:"data save successfully",
+            data:product});
+    }
+    catch(err){
+        if(err.code ===1100){
+            res.status(500).json({message:"Duplicate title is node allowed"})
+        }
+        else{
+            res.status(500).json({message:err.message})
+        }
+
+    }
+
 
 }
-const updateProduct = (req,res) =>{
-    const {productId} = req.params
+const replaceProduct = async (req,res) =>{
+    try{
+    const {productId} = req.query;
+    const replaceProduct = await ProductModel.findOneAndReplace({_id:productId},{new:true})
+    res.json({replaceProduct})
+    }
+    catch(err){
+        res.status(500).json({msg:err.message})
+    }
 
-    console.log("patched data successfully");
+
+}
+const updateProduct = async(req,res) =>{
+    try{
+        const {productId} = req.query;
+        const replaceProduct = await ProductModel.findByIdAndUpdate({_id:productId},req.body,{new:true})
+        res.json({replaceProduct})
+        }
+        catch(err){
+            res.status(500).json({msg:err.message})
+        }
     
 }
-const deleteProduct = (req,res) =>{
-    const {productId} = req.params
-    res.send(`data deleted ${productId}`)
-    console.log("data deleted successfully");
+const deleteProduct = async(req,res) =>{
+    try{
+        const {productId} = req.query;
+        const replaceProduct = await ProductModel.findByIdAndDelete(productId)
+        res.json({replaceProduct})
+        }
+        catch(err){
+            res.status(500).json({msg:err.message})
+        }
     
 }
 module.exports={
     getAllProducts,
     getProductById,
-    postProduct,
+    createProduct,
     replaceProduct,
     updateProduct,
     deleteProduct

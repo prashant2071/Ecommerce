@@ -1,9 +1,11 @@
 const express = require("express");
 const app = express();
 const cors =require('cors')
+const connectDatabase =require('./database/connection');
 require("dotenv").config();
 const productRoute = require("./routes/productRoute");
 const PORT = process.env.PORT;
+connectDatabase()
 app.use(cors());
 app.use(express.json());
 //route part****************************************
