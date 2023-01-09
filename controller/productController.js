@@ -5,11 +5,15 @@ const { Mongoose } = require('mongoose');
 
 const getAllProducts =async (req,res) =>{
     try {
-        const { category } = req.query;
+        const { category,price } = req.query;
         if (category) {
             const filteredProducts = await ProductModel.find({ category });
             res.json(filteredProducts)
-        } else {
+        }else if(price){
+            const filteredProducts= await ProductModel.find({price:{$gte:price}})
+            res.json(filteredProducts)
+        } 
+        else {
             const productData = await ProductModel.find();
             res.json(productData)
         }
